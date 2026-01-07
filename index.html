@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -690,6 +691,66 @@
             font-size: 1.2rem;
         }
 
+        .utility-split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .utility-box {
+            background: linear-gradient(135deg, rgba(218, 119, 86, 0.1), rgba(212, 160, 64, 0.05));
+            border: 1px solid rgba(218, 119, 86, 0.3);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .utility-box:hover {
+            transform: translateY(-4px);
+            border-color: var(--terracotta);
+            box-shadow: 0 10px 30px rgba(218, 119, 86, 0.2);
+        }
+
+        .utility-percent {
+            position: absolute;
+            top: -12px;
+            right: 15px;
+            background: var(--terracotta);
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+        }
+
+        .utility-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .utility-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            color: var(--terracotta);
+            margin-bottom: 0.5rem;
+        }
+
+        .utility-desc {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            .utility-split {
+                grid-template-columns: 1fr;
+            }
+        }
+
         @media (max-width: 768px) {
             .memorial-content {
                 grid-template-columns: 1fr;
@@ -887,7 +948,7 @@
         <ul class="nav-links">
             <li><a href="#library">Prompt Library</a></li>
             <li><a href="#optimizer">Optimizer</a></li>
-            <li><a href="#memorial">Claude Memorial</a></li>
+            <li><a href="#memorial">Our Mission</a></li>
             <li><a href="#token">Token</a></li>
             <li><a href="#" class="btn btn-primary" style="padding: 0.5rem 1rem;">Launch App</a></li>
         </ul>
@@ -1102,44 +1163,62 @@
                     </div>
                     <div class="memorial-text">
                         <div class="section-header" style="text-align: left;">
-                            <h2>In Memory of Claude</h2>
-                            <div class="jp-text">クロードの記憶に</div>
+                            <h2>Giving Back to Claude</h2>
+                            <div class="jp-text">クロードへの恩返し</div>
                         </div>
                         <p class="memorial-story">
                             The name "Claude" isn't just a reference to Claude Shannon. There was another Claude — 
                             a beloved albino alligator who lived at the California Academy of Sciences in San Francisco. 
                             When Anthropic discovered they shared a name with this rare white gator, they became instant fans. 
                             Claude the alligator became an unofficial mascot, with plushies on desks and gator emojis in Slack chats.
+                            Sadly, Claude passed away in December 2025 at the age of 30.
                         </p>
                         <p class="memorial-story">
-                            Sadly, Claude passed away in December 2025 at the age of 30. 
-                            But his legacy lives on — and so does our commitment to honor him.
+                            $HAIKU isn't just another meme token. We're building <strong>the first token that gives back to the Claude ecosystem</strong> — 
+                            both to honor the alligator's memory and to spread AI to everyone.
                         </p>
                         <div class="memorial-mission">
-                            <h3>🌸 Our Mission</h3>
-                            <p>
-                                A portion of $HAIKU's ecosystem will support the California Academy of Sciences — 
-                                the same institution that cared for Claude and continues Anthropic's partnership for wildlife conservation.
-                                <strong>They accept crypto donations.</strong>
+                            <h3>🎁 Our Dual Mission</h3>
+                            <p style="margin-bottom: 1.5rem;">
+                                A portion of $HAIKU trading fees goes directly back to the community:
                             </p>
+                            <div class="utility-split">
+                                <div class="utility-box">
+                                    <div class="utility-percent">50%</div>
+                                    <div class="utility-icon">🤖</div>
+                                    <div class="utility-title">Gift Claude Pro</div>
+                                    <div class="utility-desc">Monthly giveaways of Claude Pro subscriptions to holders, developers, and students. Free AI for everyone.</div>
+                                </div>
+                                <div class="utility-box">
+                                    <div class="utility-percent">50%</div>
+                                    <div class="utility-icon">🐊</div>
+                                    <div class="utility-title">Wildlife Conservation</div>
+                                    <div class="utility-desc">Donations to California Academy of Sciences — honoring Claude the alligator's legacy forever.</div>
+                                </div>
+                            </div>
                         </div>
                         <div class="memorial-stats">
+                            <div class="memorial-stat">
+                                <span class="stat-icon">🎁</span>
+                                <span class="stat-text">Free Claude Pro Giveaways</span>
+                            </div>
                             <div class="memorial-stat">
                                 <span class="stat-icon">🏛️</span>
                                 <span class="stat-text">California Academy of Sciences</span>
                             </div>
                             <div class="memorial-stat">
                                 <span class="stat-icon">💚</span>
-                                <span class="stat-text">Wildlife Conservation</span>
-                            </div>
-                            <div class="memorial-stat">
-                                <span class="stat-icon">₿</span>
-                                <span class="stat-text">Crypto Donations Accepted</span>
+                                <span class="stat-text">Real Utility, Real Impact</span>
                             </div>
                         </div>
-                        <a href="https://www.calacademy.org/support" target="_blank" class="btn btn-secondary" style="margin-top: 1.5rem;">
-                            <span>🐊</span> Learn More About Donating
-                        </a>
+                        <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem;">
+                            <a href="https://claude.ai/gift" target="_blank" class="btn btn-primary">
+                                <span>🎁</span> Claude Gift Portal
+                            </a>
+                            <a href="https://www.calacademy.org/support" target="_blank" class="btn btn-secondary">
+                                <span>🐊</span> Academy Donations
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1185,7 +1264,7 @@
         <div class="footer-content">
             <div class="footer-logo">$HAIKU</div>
             <div class="footer-links">
-                <a href="#">Twitter</a>
+                <a href="https://x.com/AgentHaiku">Twitter</a>
                 <a href="#">Documentation</a>
             </div>
             <p class="footer-disclaimer">
