@@ -917,6 +917,11 @@
             50% { opacity: 0.5; }
         }
 
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .loading {
             animation: pulse 1.5s infinite;
         }
@@ -1007,16 +1012,16 @@
             </div>
 
             <div class="prompt-categories">
-                <button class="category-btn active">All</button>
-                <button class="category-btn">💻 Coding</button>
-                <button class="category-btn">✍️ Writing</button>
-                <button class="category-btn">📊 Analysis</button>
-                <button class="category-btn">🎨 Creative</button>
-                <button class="category-btn">🤖 Agents</button>
+                <button class="category-btn active" data-category="all">All</button>
+                <button class="category-btn" data-category="coding">💻 Coding</button>
+                <button class="category-btn" data-category="writing">✍️ Writing</button>
+                <button class="category-btn" data-category="analysis">📊 Analysis</button>
+                <button class="category-btn" data-category="creative">🎨 Creative</button>
+                <button class="category-btn" data-category="agents">🤖 Agents</button>
             </div>
 
             <div class="prompt-grid">
-                <div class="prompt-card">
+                <div class="prompt-card" data-category="coding">
                     <div class="prompt-card-header">
                         <h3>Code Review Expert</h3>
                         <span class="prompt-tag">Coding</span>
@@ -1034,7 +1039,7 @@
                     </div>
                 </div>
 
-                <div class="prompt-card">
+                <div class="prompt-card" data-category="creative">
                     <div class="prompt-card-header">
                         <h3>Creative Story Writer</h3>
                         <span class="prompt-tag">Creative</span>
@@ -1052,7 +1057,7 @@
                     </div>
                 </div>
 
-                <div class="prompt-card">
+                <div class="prompt-card" data-category="analysis">
                     <div class="prompt-card-header">
                         <h3>Data Analysis Agent</h3>
                         <span class="prompt-tag">Analysis</span>
@@ -1070,7 +1075,7 @@
                     </div>
                 </div>
 
-                <div class="prompt-card">
+                <div class="prompt-card" data-category="agents">
                     <div class="prompt-card-header">
                         <h3>Autonomous Agent Builder</h3>
                         <span class="prompt-tag">Agents</span>
@@ -1088,7 +1093,7 @@
                     </div>
                 </div>
 
-                <div class="prompt-card">
+                <div class="prompt-card" data-category="writing">
                     <div class="prompt-card-header">
                         <h3>Technical Writer Pro</h3>
                         <span class="prompt-tag">Writing</span>
@@ -1106,7 +1111,7 @@
                     </div>
                 </div>
 
-                <div class="prompt-card">
+                <div class="prompt-card" data-category="coding">
                     <div class="prompt-card-header">
                         <h3>Claude API Specialist</h3>
                         <span class="prompt-tag">Coding</span>
@@ -1263,8 +1268,7 @@
         <div class="footer-content">
             <div class="footer-logo">$HAIKU</div>
             <div class="footer-links">
-                <a href="https://x.com/i/communities/2008952673479856470">Twitter</a>
-                <a href="#">Documentation</a>
+                <a href="https://x.com/i/communities/2008952673479856470" target="_blank">𝕏 Community</a>
             </div>
             <p class="footer-disclaimer">
                 $HAIKU is a community token. This is not financial advice. 
@@ -1550,11 +1554,25 @@ ${task}${context ? '\n\n## Additional Details\n' + context : ''}
             return 'Structured prose with clear sections';
         }
 
-        // Category buttons
+        // Category filter buttons
         document.querySelectorAll('.category-btn').forEach(btn => {
             btn.addEventListener('click', function() {
+                // Update active state
                 document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
+                
+                // Get selected category
+                const category = this.getAttribute('data-category');
+                
+                // Filter cards
+                document.querySelectorAll('.prompt-card').forEach(card => {
+                    if (category === 'all' || card.getAttribute('data-category') === category) {
+                        card.style.display = 'block';
+                        card.style.animation = 'fadeIn 0.3s ease';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
             });
         });
 
