@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1264,7 +1263,7 @@
         <div class="footer-content">
             <div class="footer-logo">$HAIKU</div>
             <div class="footer-links">
-                <a href="https://x.com/AgentHaiku">Twitter</a>
+                <a href="https://x.com/i/communities/2008952673479856470">Twitter</a>
                 <a href="#">Documentation</a>
             </div>
             <p class="footer-disclaimer">
@@ -1300,7 +1299,7 @@
             setTimeout(createSakura, i * 200);
         }
 
-        // Prompt optimizer simulation
+        // Smart Prompt Optimizer
         function optimizePrompt() {
             const input = document.getElementById('input-prompt').value;
             const output = document.getElementById('output-prompt');
@@ -1312,37 +1311,243 @@
             }
 
             btn.disabled = true;
-            btn.innerHTML = '⏳ Optimizing...';
+            btn.innerHTML = '⏳ Analyzing...';
             output.value = '';
 
-            // Simulate optimization
             setTimeout(() => {
-                const optimized = `You are an expert assistant specialized in ${input.toLowerCase().includes('code') ? 'software development' : 'the requested task'}.
-
-## Context
-${input}
-
-## Instructions
-1. Analyze the request carefully before responding
-2. Break down complex tasks into manageable steps
-3. Provide clear, actionable guidance
-4. Include relevant examples when helpful
-5. Ask clarifying questions if needed
-
-## Output Format
-- Start with a brief summary of your approach
-- Provide detailed step-by-step guidance
-- End with next steps or recommendations
-
-## Quality Standards
-- Be concise but comprehensive
-- Use proper formatting for readability
-- Cite sources when applicable`;
-
+                const optimized = generateOptimizedPrompt(input);
                 output.value = optimized;
                 btn.disabled = false;
                 btn.innerHTML = '⚡ Optimize Prompt';
-            }, 1500);
+            }, 1200);
+        }
+
+        function generateOptimizedPrompt(input) {
+            const lowerInput = input.toLowerCase();
+            
+            // Detect task type
+            const taskPatterns = {
+                coding: ['code', 'function', 'script', 'program', 'debug', 'fix', 'api', 'database', 'python', 'javascript', 'react', 'html', 'css', 'sql', 'algorithm', 'class', 'method', 'variable', 'loop', 'array', 'object', 'error', 'bug', 'deploy', 'git', 'npm', 'import'],
+                writing: ['write', 'essay', 'article', 'blog', 'story', 'email', 'letter', 'content', 'copy', 'text', 'paragraph', 'draft', 'edit', 'proofread', 'rewrite', 'summarize', 'translate'],
+                analysis: ['analyze', 'analysis', 'compare', 'evaluate', 'assess', 'review', 'research', 'data', 'report', 'metrics', 'statistics', 'trends', 'insights', 'findings'],
+                creative: ['creative', 'idea', 'brainstorm', 'design', 'logo', 'brand', 'name', 'slogan', 'tagline', 'concept', 'innovative', 'unique', 'original'],
+                explain: ['explain', 'what is', 'how does', 'why', 'describe', 'define', 'meaning', 'concept', 'understand', 'learn', 'teach', 'tutorial'],
+                planning: ['plan', 'strategy', 'roadmap', 'schedule', 'organize', 'project', 'task', 'goal', 'milestone', 'timeline', 'budget', 'resource']
+            };
+
+            let detectedType = 'general';
+            let maxScore = 0;
+            
+            for (const [type, keywords] of Object.entries(taskPatterns)) {
+                const score = keywords.filter(kw => lowerInput.includes(kw)).length;
+                if (score > maxScore) {
+                    maxScore = score;
+                    detectedType = type;
+                }
+            }
+
+            // Extract key elements from input
+            const sentences = input.split(/[.!?]+/).filter(s => s.trim().length > 0);
+            const mainTask = sentences[0]?.trim() || input.trim();
+            const additionalContext = sentences.slice(1).join('. ').trim();
+
+            // Build optimized prompt based on type
+            const templates = {
+                coding: buildCodingPrompt(mainTask, additionalContext, input),
+                writing: buildWritingPrompt(mainTask, additionalContext, input),
+                analysis: buildAnalysisPrompt(mainTask, additionalContext, input),
+                creative: buildCreativePrompt(mainTask, additionalContext, input),
+                explain: buildExplainPrompt(mainTask, additionalContext, input),
+                planning: buildPlanningPrompt(mainTask, additionalContext, input),
+                general: buildGeneralPrompt(mainTask, additionalContext, input)
+            };
+
+            return templates[detectedType];
+        }
+
+        function buildCodingPrompt(task, context, original) {
+            const lang = detectLanguage(original);
+            return `You are a senior software engineer with expertise in ${lang || 'multiple programming languages'}.
+
+## Task
+${task}${context ? '\n\n## Additional Context\n' + context : ''}
+
+## Requirements
+- Write clean, well-documented code
+- Follow best practices and design patterns
+- Include error handling where appropriate
+- Optimize for readability and maintainability
+
+## Expected Output
+1. Working code solution
+2. Brief explanation of the approach
+3. Any assumptions made
+4. Potential improvements or alternatives
+
+${lang ? `## Tech Stack\nPrimary language: ${lang}` : ''}`;
+        }
+
+        function buildWritingPrompt(task, context, original) {
+            const tone = detectTone(original);
+            const format = detectFormat(original);
+            return `You are an experienced content writer and editor.
+
+## Task
+${task}${context ? '\n\n## Context\n' + context : ''}
+
+## Writing Guidelines
+- Tone: ${tone}
+- Format: ${format}
+- Be clear and engaging
+- Use active voice when possible
+- Structure content logically
+
+## Deliverable
+Provide well-structured content that:
+- Opens with a compelling hook
+- Develops ideas coherently  
+- Concludes with impact
+- Is ready for the intended audience`;
+        }
+
+        function buildAnalysisPrompt(task, context, original) {
+            return `You are a skilled analyst with expertise in critical thinking and data interpretation.
+
+## Analysis Request
+${task}${context ? '\n\n## Background Information\n' + context : ''}
+
+## Analytical Framework
+1. Identify key factors and variables
+2. Examine relationships and patterns
+3. Consider multiple perspectives
+4. Evaluate strengths and weaknesses
+5. Draw evidence-based conclusions
+
+## Expected Deliverable
+- Executive summary of findings
+- Detailed analysis with supporting evidence
+- Key insights and implications
+- Actionable recommendations`;
+        }
+
+        function buildCreativePrompt(task, context, original) {
+            return `You are a creative director with a talent for innovative thinking.
+
+## Creative Brief
+${task}${context ? '\n\n## Additional Direction\n' + context : ''}
+
+## Creative Approach
+- Think outside conventional boundaries
+- Generate multiple unique concepts
+- Balance creativity with practicality
+- Consider the target audience
+
+## Deliverables
+1. 3-5 distinct creative concepts
+2. Brief rationale for each
+3. Recommended top choice with reasoning
+4. Potential variations or extensions`;
+        }
+
+        function buildExplainPrompt(task, context, original) {
+            return `You are an expert educator skilled at making complex topics accessible.
+
+## Topic to Explain
+${task}${context ? '\n\n## Specific Areas of Interest\n' + context : ''}
+
+## Explanation Guidelines
+- Start with the fundamental concept
+- Build understanding progressively
+- Use clear analogies and examples
+- Avoid unnecessary jargon
+- Anticipate common questions
+
+## Structure
+1. Simple definition/overview
+2. Core concepts explained
+3. Real-world examples
+4. Common misconceptions addressed
+5. Resources for deeper learning`;
+        }
+
+        function buildPlanningPrompt(task, context, original) {
+            return `You are a strategic planner with expertise in project management.
+
+## Planning Objective
+${task}${context ? '\n\n## Context & Constraints\n' + context : ''}
+
+## Planning Framework
+- Define clear objectives and success metrics
+- Identify key milestones and dependencies
+- Allocate resources effectively
+- Anticipate risks and mitigation strategies
+- Build in flexibility for adjustments
+
+## Deliverable
+1. Executive summary of the plan
+2. Detailed action items with owners
+3. Timeline with key milestones
+4. Risk assessment
+5. Success criteria and KPIs`;
+        }
+
+        function buildGeneralPrompt(task, context, original) {
+            return `You are a knowledgeable assistant ready to help with this request.
+
+## Request
+${task}${context ? '\n\n## Additional Details\n' + context : ''}
+
+## Approach
+- Understand the core need
+- Provide accurate, helpful information
+- Be thorough yet concise
+- Offer actionable guidance
+
+## Response Format
+1. Direct answer to the request
+2. Supporting details or explanation
+3. Relevant examples if helpful
+4. Next steps or recommendations`;
+        }
+
+        function detectLanguage(text) {
+            const languages = {
+                'python': ['python', 'django', 'flask', 'pandas', 'numpy', 'pip', '.py'],
+                'JavaScript': ['javascript', 'js', 'node', 'react', 'vue', 'angular', 'npm', 'typescript', 'ts'],
+                'HTML/CSS': ['html', 'css', 'scss', 'sass', 'tailwind', 'bootstrap'],
+                'SQL': ['sql', 'mysql', 'postgres', 'database', 'query', 'table'],
+                'Java': ['java', 'spring', 'maven', 'gradle'],
+                'C#': ['c#', 'csharp', '.net', 'asp.net'],
+                'Go': ['golang', ' go ', 'go module'],
+                'Rust': ['rust', 'cargo'],
+                'PHP': ['php', 'laravel', 'wordpress'],
+                'Ruby': ['ruby', 'rails', 'gem']
+            };
+            
+            const lower = text.toLowerCase();
+            for (const [lang, keywords] of Object.entries(languages)) {
+                if (keywords.some(kw => lower.includes(kw))) return lang;
+            }
+            return null;
+        }
+
+        function detectTone(text) {
+            const lower = text.toLowerCase();
+            if (lower.includes('formal') || lower.includes('professional') || lower.includes('business')) return 'Professional/Formal';
+            if (lower.includes('casual') || lower.includes('friendly') || lower.includes('conversational')) return 'Casual/Conversational';
+            if (lower.includes('academic') || lower.includes('scholarly') || lower.includes('research')) return 'Academic/Scholarly';
+            if (lower.includes('persuasive') || lower.includes('marketing') || lower.includes('sales')) return 'Persuasive/Marketing';
+            return 'Clear and engaging (adapt to context)';
+        }
+
+        function detectFormat(text) {
+            const lower = text.toLowerCase();
+            if (lower.includes('blog')) return 'Blog post with headers and sections';
+            if (lower.includes('email')) return 'Professional email format';
+            if (lower.includes('article')) return 'Article with introduction, body, conclusion';
+            if (lower.includes('social') || lower.includes('tweet') || lower.includes('post')) return 'Social media optimized';
+            if (lower.includes('report')) return 'Structured report with sections';
+            return 'Structured prose with clear sections';
         }
 
         // Category buttons
